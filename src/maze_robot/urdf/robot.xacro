@@ -4,7 +4,7 @@
   <!-- ===================== -->
   <!-- Mathematical constant -->
   <!-- ===================== -->
-  <xacro:property name="pi" value="3.14159265"/>
+  <xacro:property name="pi_const" value="3.14159265"/>
 
   <!-- ===================== -->
   <!-- Robot body dimensions -->
@@ -56,10 +56,10 @@
                   value="${chassis_density * chassis_length * chassis_height * chassis_width}"/>
 
   <xacro:property name="wheel_mass"
-                  value="${wheel_density * pi * wheel_radius * wheel_radius * wheel_width}"/>
+                  value="${wheel_density * pi_const * wheel_radius * wheel_radius * wheel_width}"/>
 
   <xacro:property name="caster_mass"
-                  value="${caster_density * (4.0/3.0) * pi * wheel_radius * wheel_radius * wheel_radius}"/>
+                  value="${caster_density * (4.0/3.0) * pi_const * wheel_radius * wheel_radius * wheel_radius}"/>
 
   <!-- ===================== -->
   <!-- Inertia calculations -->
