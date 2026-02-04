@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<robot name="differential_drive_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ===================== -->
+  <!-- Mathematical constant -->
+  <!-- ===================== -->
+  <xacro:property name="pi" value="3.14159265"/>
+
+  <!-- ===================== -->
+  <!-- Robot body dimensions -->
+  <!-- ===================== -->
+  <!-- Length of robot chassis (X axis) -->
+  <xacro:property name="chassis_length" value="1.0"/>
+
+  <!-- Height of robot chassis (Z axis) -->
+  <xacro:property name="chassis_height" value="0.3"/>
+
+  <!-- Width of robot chassis (Y axis) -->
+  <xacro:property name="chassis_width" value="0.6"/>
+
+  <!-- ===================== -->
+  <!-- Wheel & caster geometry -->
+  <!-- ===================== -->
+  <!-- Radius of wheels and caster -->
+  <xacro:property name="wheel_radius" value="0.15"/>
+
+  <!-- Thickness of wheel -->
+  <xacro:property name="wheel_width" value="0.1"/>
+
+  <!-- ===================== -->
+  <!-- Precomputed offsets -->
+  <!-- ===================== -->
+  <!-- Z offset of chassis center from base_footprint -->
+  <xacro:property name="chassis_z_offset" value="${chassis_height/2 + wheel_radius}"/>
+
+  <!-- X offset of rear wheels from chassis center -->
+  <xacro:property name="rear_wheel_x_offset" value="${2 * wheel_radius}"/>
+
+  <!-- X offset of caster wheel from chassis center -->
+  <xacro:property name="caster_x_offset" value="${2 * wheel_radius}"/>
+
+  <!-- Y offset of wheels from chassis center -->
+  <xacro:property name="wheel_y_offset" value="${chassis_width/2 + wheel_width/2}"/>
+
+  <!-- ===================== -->
+  <!-- Material densities -->
+  <!-- ===================== -->
+  <xacro:property name="chassis_density" value="2710.0"/>
+  <xacro:property name="wheel_density" value="2710.0"/>
+  <xacro:property name="caster_density" value="2710.0"/>
+
+  <!-- ===================== -->
+  <!-- Mass calculations -->
+  <!-- ===================== -->
+  <xacro:property name="chassis_mass"
+                  value="${chassis_density * chassis_length * chassis_height * chassis_width}"/>
+
+  <xacro:property name="wheel_mass"
+                  value="${wheel_density * pi * wheel_radius * wheel_radius * wheel_width}"/>
+
+  <xacro:property name="caster_mass"
+                  value="${caster_density * (4.0/3.0) * pi * wheel_radius * wheel_radius * wheel_radius}"/>
+
+  <!-- ===================== -->
+  <!-- Inertia calculations -->
+  <!-- ===================== -->
+  <xacro:property name="chassis_inertia_x"
+                  value="${(1.0/12.0) * chassis_mass * (chassis_height*chassis_height + chassis_width*chassis_width)}"/>
+
+  <xacro:property name="chassis_inertia_y"
+                  value="${(1.0/12.0) * chassis_mass * (chassis_length*chassis_length + chassis_width*chassis_width)}"/>
+
+  <xacro:property name="chassis_inertia_z"
+                  value="${(1.0/12.0) * chassis_mass * (chassis_length*chassis_length + chassis_height*chassis_height)}"/>
+
+  <xacro:property name="wheel_inertia_z" value="${0.5 * wheel_mass * wheel_radius * wheel_radius}"/>
+  <xacro:property name="wheel_inertia_xy"
+                  value="${(1.0/12.0) * wheel_mass * (3.0 * wheel_radius * wheel_radius + wheel_width * wheel_width)}"/>
+
+  <xacro:property name="caster_inertia"
+                  value="${(2.0/5.0) * caster_mass * wheel_radius * wheel_radius}"/>
+
+  <!-- ===================== -->
+  <!-- Inertia macros -->
+  <!-- ===================== -->
+  <xacro:macro name="chassis_inertia">
+    <inertial>
+      <origin xyz="0 0 ${chassis_z_offset}" rpy="0 0 0"/>
+      <mass value="${chassis_mass}"/>
+      <inertia ixx="${chassis_inertia_x}" ixy="0" ixz="0"
+               iyy="${chassis_inertia_y}" iyz="0"
+               izz="${chassis_inertia_z}"/>
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="wheel_inertia">
+    <inertial>
+      <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+      <mass value="${wheel_mass}"/>
+      <inertia ixx="${wheel_inertia_xy}" ixy="0" ixz="0"
+               iyy="${wheel_inertia_xy}" iyz="0"
+               izz="${wheel_inertia_z}"/>
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="caster_inertia">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${caster_mass}"/>
+      <inertia ixx="${caster_inertia}" ixy="0" ixz="0"
+               iyy="${caster_inertia}" iyz="0"
+               izz="${caster_inertia}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- ===================== -->
+  <!-- Gazebo-specific params -->
+  <!-- ===================== -->
+  <xacro:include filename="$(find maze_robot)/urdf/robot.gazebo"/>
+
+  <!-- ===================== -->
+  <!-- Base footprint -->
+  <!-- ===================== -->
+  <link name="base_footprint"/>
+
+  <joint name="base_to_chassis" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="body_link"/>
+  </joint>
+
+  <!-- ===================== -->
+  <!-- Chassis link -->
+  <!-- ===================== -->
+  <link name="body_link">
+    <visual>
+      <origin xyz="0 0 ${chassis_z_offset}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+      <material name="chassis_red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 ${chassis_z_offset}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+    </collision>
+
+    <xacro:chassis_inertia/>
+  </link>
+
+  <!-- ===================== -->
+  <!-- Left wheel -->
+  <!-- ===================== -->
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="body_link"/>
+    <child link="left_wheel_link"/>
+    <origin xyz="${-rear_wheel_x_offset} ${-wheel_y_offset} ${wheel_radius}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="50000" velocity="10"/>
+    <dynamics damping="1.0" friction="1.0"/>
+  </joint>
+
+  <link name="left_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="wheel_yellow">
+        <color rgba="1 1 0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+
+    <xacro:wheel_inertia/>
+  </link>
+
+  <!-- ===================== -->
+  <!-- Right wheel -->
+  <!-- ===================== -->
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="body_link"/>
+    <child link="right_wheel_link"/>
+    <origin xyz="${-rear_wheel_x_offset} ${wheel_y_offset} ${wheel_radius}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="50000" velocity="10"/>
+    <dynamics damping="1.0" friction="1.0"/>
+  </joint>
+
+  <link name="right_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="wheel_yellow">
+        <color rgba="1 1 0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+
+    <xacro:wheel_inertia/>
+  </link>
+
+  <!-- ===================== -->
+  <!-- Caster wheel -->
+  <!-- ===================== -->
+  <joint name="caster_joint" type="fixed">
+    <parent link="body_link"/>
+    <child link="caster_link"/>
+    <origin xyz="${caster_x_offset} 0 ${wheel_radius}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="caster_link">
+    <visual>
+      <geometry>
+        <sphere radius="${wheel_radius}"/>
+      </geometry>
+      <material name="caster_black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <geometry>
+        <sphere radius="${wheel_radius}"/>
+      </geometry>
+    </collision>
+
+    <xacro:caster_inertia/>
+  </link>
+
+</robot>

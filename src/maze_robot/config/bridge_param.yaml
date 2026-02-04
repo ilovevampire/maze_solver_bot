@@ -1,0 +1,60 @@
+# ============================================================
+# ROS 2 ↔ Gazebo Transport Bridge Configuration
+# This file is used by ros_gz_bridge parameter_bridge
+# Each entry defines how a topic is bridged between
+# ROS 2 and Gazebo (gz)
+# ============================================================
+
+# ------------------------------------------------------------
+# Clock synchronization
+# Gazebo publishes simulation time, ROS subscribes to it
+# ------------------------------------------------------------
+- ros_topic_name: "clock"                    # ROS 2 clock topic
+  gz_topic_name: "clock"                     # Gazebo clock topic
+  ros_type_name: "rosgraph_msgs/msg/Clock"   # ROS 2 message type
+  gz_type_name: "gz.msgs.Clock"              # Gazebo message type
+  direction: GZ_TO_ROS                       # Data flows from Gazebo → ROS 2
+
+# ------------------------------------------------------------
+# Joint states
+# Published by Gazebo JointStatePublisher plugin
+# Used by RViz, controllers, and debugging tools
+# ------------------------------------------------------------
+- ros_topic_name: "joint_states"              # ROS 2 joint states topic
+  gz_topic_name: "joint_states"               # Gazebo joint states topic
+  ros_type_name: "sensor_msgs/msg/JointState" # ROS 2 message type
+  gz_type_name: "gz.msgs.Model"                # Gazebo message type
+  direction: GZ_TO_ROS                         # Gazebo → ROS 2
+
+# ------------------------------------------------------------
+# Odometry
+# Published by Gazebo DiffDrive plugin
+# Provides robot position and velocity
+# ------------------------------------------------------------
+- ros_topic_name: "odom"                      # ROS 2 odometry topic
+  gz_topic_name: "odom"                       # Gazebo odometry topic
+  ros_type_name: "nav_msgs/msg/Odometry"      # ROS 2 message type
+  gz_type_name: "gz.msgs.Odometry"             # Gazebo message type
+  direction: GZ_TO_ROS                         # Gazebo → ROS 2
+
+# ------------------------------------------------------------
+# TF transforms
+# Published by Gazebo DiffDrive plugin
+# Used for coordinate frame transformations
+# ------------------------------------------------------------
+- ros_topic_name: "tf"                        # ROS 2 TF topic
+  gz_topic_name: "tf"                         # Gazebo TF topic
+  ros_type_name: "tf2_msgs/msg/TFMessage"     # ROS 2 message type
+  gz_type_name: "gz.msgs.Pose_V"               # Gazebo message type
+  direction: GZ_TO_ROS                         # Gazebo → ROS 2
+
+# ------------------------------------------------------------
+# Velocity command
+# ROS 2 publishes cmd_vel, Gazebo subscribes to it
+# Used to control robot motion
+# ------------------------------------------------------------
+- ros_topic_name: "cmd_vel"                   # ROS 2 velocity command topic
+  gz_topic_name: "cmd_vel"                    # Gazebo velocity command topic
+  ros_type_name: "geometry_msgs/msg/Twist"    # ROS 2 message type
+  gz_type_name: "gz.msgs.Twist"                # Gazebo message type
+  direction: ROS_TO_GZ                         # ROS 2 → Gazebo
