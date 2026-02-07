@@ -152,6 +152,74 @@
     <xacro:chassis_inertia/>
   </link>
 
+
+  <!-- ===================== -->
+<!-- LiDAR joint -->
+<!-- ===================== -->
+<joint name="lidar_joint" type="fixed">
+  <!-- Mount LiDAR on top of the chassis -->
+  <origin xyz="0 0 ${chassis_z_offset + wheel_radius}" rpy="0 0 0"/>
+  <parent link="body_link"/>
+  <child link="lidar_link"/>
+</joint>
+
+<!-- ===================== -->
+<!-- LiDAR link -->
+<!-- ===================== -->
+<link name="lidar_link">
+
+  <visual>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    <geometry>
+      <cylinder length="0.1" radius="0.1"/>
+    </geometry>
+    <material name="lidar_black">
+      <color rgba="0 0 0 1"/>
+    </material>
+  </visual>
+
+  <collision>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    <geometry>
+      <cylinder length="0.1" radius="0.1"/>
+    </geometry>
+  </collision>
+
+  <inertial>
+    <!-- Very small mass to avoid affecting dynamics -->
+    <mass value="1e-6"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <inertia
+      ixx="1e-6" ixy="0" ixz="0"
+      iyy="1e-6" iyz="0"
+      izz="1e-6"/>
+  </inertial>
+
+</link>
+
+
+  <!-- ===================== -->
+  <!-- Camera sensor -->
+  <!-- ===================== -->
+  <joint name="camera_joint" type="fixed">
+    <parent link="body_link"/>
+    <child link="camera_link"/>
+    <origin xyz="0.52 0 0.4" rpy="0 0 0"/>
+  </joint>
+
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+      <material name="camera_blue">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+  </link>
+
+
+
   <!-- ===================== -->
   <!-- Left wheel -->
   <!-- ===================== -->

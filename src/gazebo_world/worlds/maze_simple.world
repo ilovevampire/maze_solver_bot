@@ -1,0 +1,139 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <world name="maze_simple_world">
+
+    <!-- ===================== -->
+    <!-- Physics & gravity     -->
+    <!-- ===================== -->
+    <gravity>0 0 -9.81</gravity>
+
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+
+    <!-- ===================== -->
+    <!-- Lighting              -->
+    <!-- ===================== -->
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun</uri>
+    </include>
+
+    <!-- ===================== -->
+    <!-- Ground plane          -->
+    <!-- ===================== -->
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane</uri>
+    </include>
+
+    <!-- ===================================================== -->
+    <!-- Maze walls (all static)                               -->
+    <!-- Corridor width: 1.0 m                                 -->
+    <!-- Wall thickness: 0.1 m                                 -->
+    <!-- Wall height: 1.0 m                                    -->
+    <!-- ===================================================== -->
+
+    <!-- ===== Corridor 1 (straight, +X) ===== -->
+    <!-- Left wall -->
+    <model name="wall_1_left">
+      <static>true</static>
+      <pose>2 0.55 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>4 0.1 1.0</size></box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>4 0.1 1.0</size></box>
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Right wall -->
+    <model name="wall_1_right">
+      <static>true</static>
+      <pose>2 -0.55 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>4 0.1 1.0</size></box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>4 0.1 1.0</size></box>
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Turn 1 (left) ===== -->
+    <model name="wall_2">
+      <static>true</static>
+      <pose>4.5 1.0 0.5 0 0 1.5708</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>2 0.1 1.0</size></box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>2 0.1 1.0</size></box>
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.7 0.7 0.7 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ===== Corridor 2 ===== -->
+    <model name="wall_3_left">
+      <static>true</static>
+      <pose>5.55 2.5 0.5 0 0 1.5708</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>3 0.1 1.0</size></box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>3 0.1 1.0</size></box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_3_right">
+      <static>true</static>
+      <pose>4.45 2.5 0.5 0 0 1.5708</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box><size>3 0.1 1.0</size></box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box><size>3 0.1 1.0</size></box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
