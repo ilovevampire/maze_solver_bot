@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <world name="fuel_maze_world">
+
+    <!-- Light -->
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun</uri>
+    </include>
+
+    <!-- Ground -->
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane</uri>
+    </include>
+
+    <!-- Fuel maze model -->
+    <include>
+      <uri>model://maze_model_rs</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>
