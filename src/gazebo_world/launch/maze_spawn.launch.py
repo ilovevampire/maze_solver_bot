@@ -54,7 +54,7 @@ def generate_launch_description():
     )
 
     # =========================================================
-    # Spawn robot at maze entrance
+    # Spawn robot at desired location
     # =========================================================
     spawn_robot_node = Node(
         package='ros_gz_sim',
@@ -63,13 +63,13 @@ def generate_launch_description():
             '-name', robot_name,
             '-topic', 'robot_description',
 
-            # ---- Spawn pose (maze entrance) ----
-            '-x', '0.51',
-            '-y', '5.6',
-            '-z', '0.2',
+            
+            '-x', '-0.36',
+            '-y', '-2.63',
+            '-z', '0.2', # to avoid penetration of robot wheels in plane (ground   )
             '-R', '0.0',
             '-P', '0.0',
-            '-Y', '-2.11'
+            '-Y', '1.57'
         ],
         output='screen'
     )
