@@ -31,13 +31,13 @@
   <!-- Caster wheel contact properties -->
   <gazebo reference="caster_link">
     <!-- Very low friction to allow free rotation -->
-    <mu1>0.000002</mu1>
+    <mu1>0.000002</mu1>left_wheel_joint
     <mu2>0.000002</mu2>
     <material>Gazebo/Black</material>
   </gazebo>
 
   <!-- ===================================================== -->
-  <!-- Differential drive controller (DO NOT MODIFY LOGIC)   -->
+  <!-- Differential drive controllerleft_wheel_joint (DO NOT MODIFY LOGIC)   -->
   <!-- ===================================================== -->
 
 
@@ -58,12 +58,13 @@
       <odom_topic>odom</odom_topic>
 
       <frame_id>odom</frame_id>
-      <child_frame_id>base_footprint</child_frame_id>
+      <child_frame_id>base_link</child_frame_id>
+      
 
     <!-- TF PUBLISHING (THIS WAS MISSING) -->
     <publish_tf>true</publish_tf>
     <odom_frame>odom</odom_frame>
-    <base_frame>base_footprint</base_frame>
+    <base_frame>base_link</base_frame>
 
 
 
