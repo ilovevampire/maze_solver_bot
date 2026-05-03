@@ -90,5 +90,5 @@ Feel free to fork the project, open issues, or submit pull requests to improve t
 
 ---
 
-Happy exploring and navigating! 🚀
+Make sure to map area precisely to get better nav2 output
 
